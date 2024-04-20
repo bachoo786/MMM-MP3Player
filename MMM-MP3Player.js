@@ -1,9 +1,9 @@
 var MP3;
 var substr;
-Module.register("MMM-MP3Player1", {
+Module.register("MMM-MP3Player", {
   defaults: {
     songs: [],
-    musicPath: "modules/MMM-MP3Player1/music",
+    musicPath: "modules/MMM-MP3Player/music",
     extensions: ["mp3", "wma", "acc", "ogg"],
     songs: null,
     autoPlay: false,
@@ -21,7 +21,7 @@ Module.register("MMM-MP3Player1", {
   substr: null,
   
   getStyles: function(){
-    return ["MMM-MP3Player1.css", "font-awesome.css"];
+    return ["MMM-MP3Player.css", "font-awesome.css"];
   },
 
   start: function(){
