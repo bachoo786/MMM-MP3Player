@@ -21,18 +21,66 @@
     /* ...other styles... */
 }
 
+.MMM-MP3Player .mediaPlayer {
+    position: absolute;
+    right: -150px;
+    top: 10px;
+    width: 50%;
+    height: 230px; /* Adjust the height if needed */
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 20px; /* Rounded corners for the card */
+    overflow: visible; /* Ensure the song cover is visible outside the container */
+    z-index: 1002; /* Higher than the song cover */
+
+    
+}
+
+.MMM-MP3Player .mediaPlayer::before {
+    content: '';
+    position: absolute;
+    top: -100px; /* Extend outside the top */
+    right: 0px; /* Align with the right edge of mediaPlayer */
+    bottom: -20px; /* Extend outside the bottom */
+    left: 45px; /* Align with the left edge of mediaPlayer */
+    background: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+    border-radius: 20px; /* Rounded corners */
+    z-index: -1; /* Below mediaPlayer content */
+    width: 300px; /* Match the width of mediaPlayer */
+    height: 250px;
+    box-sizing: border-box; /* Respect padding and border widths */
+}
+
+.MMM-MP3Player .songCover {
+    position: absolute;
+    bottom: 100%; /* Position above the mediaPlayer */
+    left: 50%; /* Start from half the width of mediaPlayer */
+    transform: translateX(-50%) translateY(-50%); /* Center the image */
+    width: calc(100% - 40px); /* Width considering padding */
+    max-height: 200px; /* Maximum height of the image */
+    object-fit: cover;
+    border-radius: 10px; /* Optional: rounded corners for the image */
+    display: block;
+    opacity: 1;
+    z-index: 1001; /* Ensure it's above the background but below the controls */
+}
+
+
+
+
 .MMM-MP3Player .songsList {
     position: absolute;
-    left: 10px; /* Adjust to align correctly, can be in px or % */
-    top: -360px;  /* Adjust to align correctly, can be in px or % */
-    width: 50%; /* Adjust to not exceed the container width */
+    left: 450px; /* Adjust to align correctly, can be in px or % */
+    bottom: 20px;  /* Adjust to align correctly, can be in px or % */
+    width: 250px; /* Adjust to not exceed the container width */
     max-width: calc(100% - 40px); /* Subtract total horizontal padding */
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
-    font-size: 2em;
+    list-style-type: none;
+    font-size: 1.25em;
     font-weight: bold;
-    color: #FFF;
+    color: #000;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -48,24 +96,60 @@
         ),
         url('images/qsonglist.png');
     background-size: cover;
-    background-position: center;    border-radius: 20px;
+    background-position: center;    
+    border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.MMM-MP3Player .mediaPlayer {
+
+.MMM-MP3Player .musicList::before {
+    content: "Reciters/Qari"; /* Text you want to appear as the heading */
+    display: block; /* Make sure it behaves like a block element */
+    text-align: center; /* Center the text */
+    font-size: 1.5em; /* Size of the font */
+    font-weight: bold; /* Bold text */
+    color: #000; /* Color of the text */
+    padding-bottom: 10px; /* Space between the heading and the list */
+}
+
+
+.MMM-MP3Player .musicList {
     position: absolute;
-    right: 0;  /* Adjust as needed to align to the right */
-    top: -130px;       /* Aligns to the top of the container */
-    width: 50%;   /* Or whatever width you require */
+    left: 20px;  /* Adjust as needed to align to the right */
+    top: -150px;       /* Aligns to the top of the container */
+    width: 200px   /* Or whatever width you require */
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
     justify-content: center;
     z-index: 1000; 
+    list-style-type: none;
+    color: #000;
+    font-weight: bold;
+    padding: 20px;
+    background-image: 
+        linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.8) 0%, 
+            rgba(255, 255, 255, 0.75) 25%, 
+            rgba(255, 255, 255, 0.6) 50%,
+            rgba(255, 255, 255, 0.4) 75%,
+            rgba(255, 255, 255, 0.3) 100%
+        ),
+        url('images/qsonglist.png');
+    background-size: cover;
+    background-position: center;    
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
 }
+
 
 
 .MMM-MP3Player .controls {

@@ -38,6 +38,7 @@ getDom: function() {
     if (MP3.config.musicData) {
         const musicList = MP3.createElement("ul", "musicList", "musicList", wrapper);
         let currentlyOpenSongsList = null; 
+    let first = true;  // Flag to track the first iteration
 
         MP3.config.musicData.forEach(folderData => {
             // Folder item
@@ -51,6 +52,14 @@ getDom: function() {
             songsList.style.display = 'none'; // Initially hide the songs list
 
 
+
+        if (first) {
+            songsList.style.display = 'block';  // Make the first songs list visible
+            currentlyOpenSongsList = songsList;  // Set this as the currently open songs list
+            first = false;  // Reset the flag so only the first list is shown
+        }
+
+
             folderData.songs.forEach(song => {
                 const  songParts = song.split('.')
                 const songItem = MP3.createElement("li", "songItem", `songItem-${song}`, songsList, songParts[0]);
@@ -60,6 +69,9 @@ getDom: function() {
                 songItem.addEventListener('click', (event) => {
                     event.stopPropagation();
                     const clickedSongItem = event.target;
+MP3.play.getElementsByTagName('i')[0].className = "fa fa-pause";
+
+
                     //if (clickedSongItem.classList.contains('songItem')) {
                         MP3.playSong(clickedSongItem) // folderName, songName,clickedSongItem.songType );
                     //}
@@ -86,6 +98,12 @@ getDom: function() {
         // Add the rest of the existing code...
         MP3.mediaPlayer = MP3.createElement("div", "mediaPlayer", "mediaPlayer", wrapper);
         MP3.audio = MP3.createElement("audio", "audioPlayer", "audioPlayer", MP3.mediaPlayer);
+
+    // Create an image element for the song cover
+    MP3.songCover = MP3.createElement("img", "songCover", "songCover", MP3.mediaPlayer);
+    MP3.songCover.style.maxWidth = '100px'; // Set a maximum width for the image
+    MP3.songCover.style.padding = '10px'; // Add some padding
+
         // wait til song data loaded
         MP3.audio.addEventListener("loadeddata", () => {
             MP3.dataAvailable = true;
@@ -113,14 +131,6 @@ getDom: function() {
         var controls = MP3.createElement("div", "controls", false, MP3.mediaPlayer);
         MP3.songTitle = MP3.createElement("span", "title", "songTitle", controls);
 
-        var discArea = MP3.createElement("div", "discarea", false, MP3.mediaPlayer);
-        MP3.createElement("div", "disc", false, discArea);
-        var stylus = MP3.createElement("div", "stylus", false, discArea);
-        MP3.createElement("div", "pivot", false, stylus);
-        MP3.createElement("div", "arm", false, stylus);
-        MP3.createElement("div", "head", false, stylus);
-        //discArea.appendChild(stylus);
-        //MP3.mediaPlayer.appendChild(discArea);
 
       var buttons = MP3.createElement("div", "buttons", false, controls);
 
@@ -138,20 +148,25 @@ getDom: function() {
       // play button handler
       MP3.play.addEventListener("click", () => {
         MP3.mediaPlayer.classList.toggle("play");
-        if (MP3.audio.paused) {
-          setTimeout(() => {
-              MP3.loadNext(MP3.config.random,true)
-          }, 300);
-          //MP3.play.getElementsByTagName('i')[0].className = "fa fa-pause";
+        if (MP3.audio.paused && MP3.playing) {  // if paused and were playing (paused is true even if no song yet picked)
+          // resume playing this song
+          MP3.audio.play();
+          //MP3.playing= true;  // don't reset point to playing songItem
+          MP3.play.getElementsByTagName('i')[0].className = "fa fa-pause";
           MP3.timer = setInterval(MP3.updateDurationLabel, 100);
-        } else {
-          //we were NOT paused, so playing
-          // stop
-          MP3.play.getElementsByTagName('i')[0].className = "fa fa-play";
-          clearInterval(MP3.timer);
-          if(MP3.playing)
+        } else {  // not paused
+          // were we playing?
+          if(MP3.playing){
+            // we were playing
+            // pause now
+            MP3.play.getElementsByTagName('i')[0].className = "fa fa-play";
+            clearInterval(MP3.timer);
             MP3.playing.classList.toggle("playing")
-          MP3.audio.pause();
+            // so pause
+            MP3.audio.pause();
+          } else { // NOT playing, and not autoplay, so startup (forward)
+            MP3.loadNext(MP3.config.random, true)
+          }
         }
       }, false);
 
@@ -162,8 +177,10 @@ getDom: function() {
         MP3.mediaPlayer.classList.remove("play");
         MP3.audio.pause();
         MP3.audio.currentTime = 0;
-        if(MP3.playing)
+        if(MP3.playing){
           MP3.playing.classList.remove("playing")
+          MP3.playing=false
+        }
         MP3.play.getElementsByTagName('i')[0].className = "fa fa-play";
         MP3.updateDurationLabel();
       }, false);
@@ -265,6 +282,11 @@ getDom: function() {
       const songPath = MP3.config.musicPath + '/' + songItem.folderName + '/' +songItem.innerText+'.'+songItem.songType;
       // set the song title
       MP3.songTitle.innerText = songItem.innerText;
+
+    // Update the song cover image based on the song title
+    let imageName = songItem.innerText.toLowerCase().replace(/ /g, '') + '.png';
+    MP3.songCover.src = "modules/MMM-MP3Player/images/" + imageName; 
+
       // save is as the playing item
       MP3.playing=songItem
       // set this last, causes the loaded event
@@ -322,3 +344,4 @@ getDom: function() {
       MP3.updateDom(2);
   },
 });
+
